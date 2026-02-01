@@ -1,0 +1,10 @@
+config BR2_PACKAGE_PYTHON_PYADI_IIO
+	bool "python-pyadi-iio"
+	select BR2_PACKAGE_PYTHON_NUMPY # runtime
+	select BR2_PACKAGE_LIBIIO_BINDINGS_PYTHON # runtime
+	help
+	  Python interfaces for Analog Devices hardware.
+	  Provides high-level classes for ADI SDR devices
+	  including PlutoSDR.
+
+	  https://github.com/analogdevicesinc/pyadi-iio

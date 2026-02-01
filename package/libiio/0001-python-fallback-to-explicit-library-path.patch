@@ -1,0 +1,27 @@
+--- a/bindings/python/iio.py
++++ b/bindings/python/iio.py
+@@ -221,10 +221,22 @@
+ if "Windows" in _system():
+     _iiolib = "libiio.dll"
+ else:
+-    # Non-windows, possibly Posix system
+-    _iiolib = "iio"
++    # Non-windows, possibly POSIX system
++    _iiolib = find_library("iio")
++    # On minimal embedded systems, find_library may fail due to missing ldconfig.
++    # Fall back to searching common library paths directly.
++    if _iiolib is None:
++        import os as _os
++        for _path in [
++            "/usr/lib/libiio.so",
++            "/usr/local/lib/libiio.so",
++            "/lib/libiio.so",
++        ]:
++            if _os.path.exists(_path):
++                _iiolib = _path
++                break
+ 
+-_lib = _cdll(find_library(_iiolib), use_errno=True, use_last_error=True)
++_lib = _cdll(_iiolib, use_errno=True, use_last_error=True)
+ 
+ _get_backends_count = _lib.iio_get_backends_count
