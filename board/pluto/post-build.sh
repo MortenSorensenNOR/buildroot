@@ -91,3 +91,16 @@ ln -sf ../../wpa_supplicant/ifupdown.sh ${TARGET_DIR}/etc/network/if-pre-up.d/wp
 ln -sf ../../wpa_supplicant/ifupdown.sh ${TARGET_DIR}/etc/network/if-post-down.d/wpasupplicant
 
 ln -sf device_reboot ${TARGET_DIR}/usr/sbin/pluto_reboot
+
+# Set matplotlib backend to Agg (no display, saves to PNG files)
+mkdir -p ${TARGET_DIR}/etc/profile.d
+echo 'export MPLBACKEND=Agg' > ${TARGET_DIR}/etc/profile.d/matplotlib.sh
+
+# Strip test directories and unused data from Python packages to reduce image size
+find ${TARGET_DIR}/usr/lib/python3.11/site-packages -type d -name "tests" -exec rm -rf {} + 2>/dev/null || true
+find ${TARGET_DIR}/usr/lib/python3.11/site-packages -type d -name "test" -exec rm -rf {} + 2>/dev/null || true
+rm -rf ${TARGET_DIR}/usr/lib/python3.11/site-packages/matplotlib/mpl-data/sample_data
+rm -rf ${TARGET_DIR}/usr/lib/python3.11/site-packages/matplotlib/backends/web_backend
+rm -rf ${TARGET_DIR}/usr/lib/python3.11/site-packages/matplotlib/sphinxext
+rm -rf ${TARGET_DIR}/usr/lib/python3.11/site-packages/numpy/f2py
+rm -rf ${TARGET_DIR}/usr/lib/python3.11/site-packages/numpy/distutils
